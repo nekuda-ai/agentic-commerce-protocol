@@ -31,7 +31,7 @@ The **Founding Maintainers** serve as the primary stewards of the ACP project.
 This tier is composed of the following organizations:
 
 - **OpenAI** - represented by Aravind Rao, Bhavin Modi and Riley Strong
-- **Stripe** - represented by TBD
+- **Stripe** - represented by Bharath Srivatsan, Prasad Wangikar, Steve Kaliski
 
 The Founding Maintainers are co-equal. Together, they are jointly responsible
 for approving all substantive specification changes, including Specification
