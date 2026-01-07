@@ -2,14 +2,14 @@
 
 This file tracks contributors who have signed the Agentic Commerce Protocol Contributor License Agreement as required by Section 2.4 of the Collaboration and Governance Agreement dated November 21, 2025.
 
-Last updated: 2025-12-16
+Last updated: 2026-01-06
 
 ## Corporate CLA Signatories
 
 | Corporation Name | Date Signed | Point of Contact | Authorized GitHub Users | CLA Issue |
 |------------------|-------------|------------------|-------------------------|-----------|
 | Stripe, Inc. | 2025-11-21 | prasad-stripe | prasad-stripe,bharath-stripe,stevekaliski-stripe,nvp-stripe,elorakelkel-stripe,mfix-stripe | NA |
-| OpenAI LLC | 2025-11-21 | aravindrao-oai | aravindrao-oai,riley-oai,bhavinmodi-oai | NA |
+| OpenAI LLC | 2025-11-21 | aravindrao-oai | aravindrao-oai,riley-oai,bhavinmodi-oai,brianlin-oai | NA |
 
 ## Individual CLA Signatories
 
