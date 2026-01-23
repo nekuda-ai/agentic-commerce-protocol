@@ -1,5 +1,212 @@
 # Unreleased Changes
 
+## Version 2026-01-22 - Enhanced Checkout Capabilities
+
+This release introduces significant enhancements to the Agentic Checkout Specification. These changes enable broader commerce scenarios while maintaining backward compatibility where possible.
+
+### Breaking Changes
+
+#### 1. Renamed `items` to `line_items` in Create/Update Requests
+
+**Impact:** `CheckoutSessionCreateRequest` and `CheckoutSessionUpdateRequest`
+
+**Change:**
+- Old: `items` array
+- New: `line_items` array
+
+**Migration:**
+```json
+// OLD
+{
+  "items": [{ "id": "item_123", "quantity": 1 }]
+}
+
+// NEW
+{
+  "line_items": [
+    {
+      "item": { "id": "item_123" },
+      "quantity": 1
+    }
+  ]
+}
+```
+
+**Rationale:** Aligns request/response terminology and clarifies that items are line-level entries in the cart.
+
+#### 2. Added Required `currency` Field to Create Request
+
+**Impact:** `CheckoutSessionCreateRequest`
+
+**Change:**
+- `currency` field is now **required** in create requests
+
+**Migration:**
+```json
+// OLD
+{
+  "items": [...]
+}
+
+// NEW
+{
+  "currency": "usd",
+  "line_items": [...]
+}
+```
+
+**Rationale:** Explicit currency declaration is essential for multi-currency support and removes ambiguity.
+
+#### 3. Moved `quantity` from Item to LineItem
+
+**Impact:** `Item` and `LineItem` schemas
+
+**Change:**
+- Old: `Item` schema contained `quantity` field
+- New: `LineItem` schema contains `quantity` field; `Item` is now just a reference
+
+**Migration:**
+```json
+// OLD Response
+{
+  "line_items": [{
+    "item": { "id": "item_123", "quantity": 2 }
+  }]
+}
+
+// NEW Response
+{
+  "line_items": [{
+    "item": { "id": "item_123" },
+    "quantity": 2
+  }]
+}
+```
+
+**Rationale:** Enables hierarchical product relationships and cleaner separation between item definitions and cart line entries.
+
+#### 4. Changed Buyer Name Fields
+
+**Impact:** `Buyer` schema
+
+**Change:**
+- `first_name` and `last_name` are now **optional**
+- Added optional `full_name` field as an alternative
+- `email` is now **required**
+
+**Migration:**
+```json
+// OLD (first_name required)
+{
+  "buyer": {
+    "first_name": "John",
+    "last_name": "Doe"
+  }
+}
+
+// NEW (flexible name handling)
+{
+  "buyer": {
+    "email": "john@example.com",      // Required
+    "full_name": "John Doe"            // OR first_name + last_name
+  }
+}
+```
+
+**Rationale:** Supports international naming conventions and reduces required fields.
+
+### New Features
+
+#### 1. Protocol Versioning & Capability Discovery
+
+Added `protocol` object to all checkout session responses:
+
+```json
+{
+  "acp": {
+    "version": "2026-01-22",
+    "capabilities": []
+  }
+}
+```
+
+#### 2. Enhanced Messaging System
+
+- Added **warning** message type with severity levels
+- Expanded error codes
+- Added `severity` field: `info`, `low`, `medium`, `high`, `critical`
+
+#### 3. New Fulfillment Types
+
+Added support for:
+- **Pickup** (`FulfillmentOptionPickup`): In-store, curbside, locker pickup
+- **Local Delivery** (`FulfillmentOptionLocalDelivery`): Same-day, scheduled delivery
+
+#### 4. Risk Signals for Fraud Prevention
+
+Added `risk_signals` to `CheckoutSessionCompleteRequest` for IP address, user agent, device fingerprint, etc.
+
+#### 5. Hierarchical Product Structure
+
+Added `parent_id` to `LineItem` for bundled/related products.
+
+#### 6. Multi-Currency Support
+
+Added presentment currency for display purposes with `presentment_currency`, `exchange_rate`, and `exchange_rate_timestamp` fields.
+
+#### 7. Session Management Enhancements
+
+- Added `expires_at` for session expiration
+- Added `continue_url` for recovery
+- Added `created_at` and `updated_at` timestamps
+- New status values: `incomplete`, `requires_escalation`, `complete_in_progress`
+
+#### 8. Additional Features
+
+- Subscription & recurring billing metadata
+- B2B commerce features (purchase orders, approval workflows)
+- Promotional campaigns (coupons, automatic discounts)
+- Enhanced product metadata (SKU, variant ID, weight, dimensions)
+- Gift services & special instructions
+- Expanded link types (`shipping_policy`, `contact_us`, `about_us`, `faq`, `support`)
+- Order confirmation details in complete responses
+- Payment response object with provider and instruments
+
+### Schema Changes
+
+**New Schemas Added:**
+- `ProtocolVersion`
+- `PaymentResponse`
+- `RiskSignals`
+- `FulfillmentOptionPickup`
+- `FulfillmentOptionLocalDelivery`
+- `MessageWarning`
+- `AppliedCoupon`
+- `AutomaticDiscount`
+- `SubscriptionDetails`
+- `ApprovalDetails`
+- `GiftOptions`
+- `SpecialInstructions`
+
+**Modified Schemas:**
+- `CheckoutSessionBase` - Added many new optional fields
+- `LineItem` - Added `quantity`, `parent_id`, extensive metadata
+- `Item` - Removed `quantity`
+- `Buyer` - Flexible name handling, company details
+- `Message` - Added severity levels
+- `Link` - Added title and new types
+- `FulfillmentOption` - Added descriptions
+
+### Migration Guide
+
+1. Update request construction to use `line_items` instead of `items`
+2. Include `currency` in all create requests
+3. Move `quantity` from Item to LineItem level in response handling
+4. Update Buyer handling for flexible name fields
+5. Optionally adopt new features (protocol versioning, new fulfillment types, etc.)
+
+---
+
 ## Version 2026-01-16
 
 ### Capability Negotiation
@@ -242,8 +449,8 @@ See [RFC: Affiliate Attribution](../rfcs/rfc.affiliate_attribution.md) for full 
 
 ## Version Compatibility
 
-- Clients MUST send `API-Version: 2026-01-16` header
-- Previous version `2026-01-15` is deprecated
+- Clients MUST send `API-Version: 2026-01-22` header
+- Previous version `2026-01-16` is deprecated
 - All changes are breaking and require client updates
 
 ## Files Updated

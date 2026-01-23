@@ -1,8 +1,11 @@
 {
   "create_checkout_session_request": {
-    "items": [
+    "currency": "usd",
+    "line_items": [
       {
-        "id": "item_123",
+        "item": {
+          "id": "item_123"
+        },
         "quantity": 1
       }
     ],
@@ -22,9 +25,12 @@
     }
   },
   "create_checkout_session_request_with_first_touch_attribution": {
-    "items": [
+    "currency": "usd",
+    "line_items": [
       {
-        "id": "item_123",
+        "item": {
+          "id": "item_123"
+        },
         "quantity": 1
       }
     ],
@@ -37,6 +43,10 @@
   },
   "create_checkout_session_response": {
     "id": "checkout_session_123",
+    "protocol": {
+      "version": "2026-01-22",
+      "capabilities": []
+    },
     "payment_provider": {
       "provider": "stripe",
       "supported_payment_methods": [
@@ -52,9 +62,9 @@
       {
         "id": "line_item_123",
         "item": {
-          "id": "item_123",
-          "quantity": 1
+          "id": "item_123"
         },
+        "quantity": 1,
         "base_amount": 300,
         "discount": 0,
         "subtotal": 300,
@@ -193,15 +203,19 @@
   },
   "update_checkout_session_response": {
     "id": "checkout_session_123",
+    "protocol": {
+      "version": "2026-01-22",
+      "capabilities": []
+    },
     "status": "ready_for_payment",
     "currency": "usd",
     "line_items": [
       {
         "id": "line_item_123",
         "item": {
-          "id": "item_123",
-          "quantity": 1
+          "id": "item_123"
         },
+        "quantity": 1,
         "base_amount": 300,
         "discount": 0,
         "subtotal": 300,
@@ -347,6 +361,10 @@
   },
   "complete_checkout_session_response": {
     "id": "checkout_session_123",
+    "protocol": {
+      "version": "2026-01-22",
+      "capabilities": []
+    },
     "buyer": {
       "first_name": "John",
       "last_name": "Smith",
@@ -359,9 +377,9 @@
       {
         "id": "line_item_123",
         "item": {
-          "id": "item_123",
-          "quantity": 1
+          "id": "item_123"
         },
+        "quantity": 1,
         "base_amount": 300,
         "discount": 0,
         "subtotal": 300,
@@ -473,15 +491,19 @@
   },
   "get_checkout_session_response": {
     "id": "checkout_session_123",
+    "protocol": {
+      "version": "2026-01-22",
+      "capabilities": []
+    },
     "status": "ready_for_payment",
     "currency": "usd",
     "line_items": [
       {
         "id": "line_item_123",
         "item": {
-          "id": "item_123",
-          "quantity": 1
+          "id": "item_123"
         },
+        "quantity": 1,
         "base_amount": 300,
         "discount": 0,
         "subtotal": 300,
@@ -599,15 +621,19 @@
   },
   "cancel_checkout_session_response": {
     "id": "checkout_session_123",
+    "protocol": {
+      "version": "2026-01-22",
+      "capabilities": []
+    },
     "status": "canceled",
     "currency": "usd",
     "line_items": [
       {
         "id": "line_item_123",
         "item": {
-          "id": "item_123",
-          "quantity": 1
+          "id": "item_123"
         },
+        "quantity": 1,
         "base_amount": 300,
         "discount": 0,
         "subtotal": 300,
@@ -724,6 +750,10 @@
   },
   "checkout_session_authentication_required": {
     "id": "checkout_session_3ds_001",
+    "protocol": {
+      "version": "2026-01-22",
+      "capabilities": []
+    },
     "payment_provider": {
       "provider": "stripe",
       "supported_payment_methods": [
@@ -736,9 +766,9 @@
       {
         "id": "line_item_3ds_001",
         "item": {
-          "id": "item_3ds_001",
-          "quantity": 1
+          "id": "item_3ds_001"
         },
+        "quantity": 1,
         "base_amount": 5000,
         "discount": 0,
         "subtotal": 5000,
