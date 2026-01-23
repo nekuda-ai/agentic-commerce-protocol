@@ -701,10 +701,10 @@ components:
         pickup_type: { type: string, enum: [in_store, curbside, locker] }
         ready_by: { type: string, format: date-time }
         pickup_by: { type: string, format: date-time }
-        subtotal: { type: integer }
-        tax: { type: integer }
-        total: { type: integer }
-      required: [type, id, title, location, total]
+        totals:
+          type: array
+          items: { $ref: "#/components/schemas/Total" }
+      required: [type, id, title, location, totals]
 
     FulfillmentOptionLocalDelivery:
       type: object
@@ -725,10 +725,10 @@ components:
           properties:
             radius_miles: { type: number }
             center_postal_code: { type: string }
-        subtotal: { type: integer }
-        tax: { type: integer }
-        total: { type: integer }
-      required: [type, id, title, total]
+        totals:
+          type: array
+          items: { $ref: "#/components/schemas/Total" }
+      required: [type, id, title, totals]
 
     FulfillmentOptionShipping:
       type: object
@@ -741,10 +741,10 @@ components:
         carrier: { type: string }
         earliest_delivery_time: { type: string, format: date-time }
         latest_delivery_time: { type: string, format: date-time }
-        subtotal: { type: integer }
-        tax: { type: integer }
-        total: { type: integer }
-      required: [type, id, title, total]
+        totals:
+          type: array
+          items: { $ref: "#/components/schemas/Total" }
+      required: [type, id, title, totals]
 
     FulfillmentOptionDigital:
       type: object
@@ -754,77 +754,21 @@ components:
         id: { type: string }
         title: { type: string }
         description: { type: string }
-        subtotal: { type: integer }
-        tax: { type: integer }
-        total: { type: integer }
-      required: [type, id, title, total]
-
-    SelectedPickupFulfillmentOption:
-      type: object
-      additionalProperties: false
-      properties:
-        option_id: { type: string }
-        item_ids:
+        totals:
           type: array
-          items: { type: string }
-      required: [option_id, item_ids]
+          items: { $ref: "#/components/schemas/Total" }
+      required: [type, id, title, totals]
 
-    SelectedLocalDeliveryFulfillmentOption:
-      type: object
-      additionalProperties: false
-      properties:
-        option_id: { type: string }
-        item_ids:
-          type: array
-          items: { type: string }
-      required: [option_id, item_ids]
-
-    SelectedShippingFulfillmentOption:
-      type: object
-      additionalProperties: false
-      properties:
-        option_id: { type: string }
-        item_ids:
-          type: array
-          items: { type: string }
-      required: [option_id, item_ids]
-
-    SelectedDigitalFulfillmentOption:
-      type: object
-      additionalProperties: false
-      properties:
-        option_id: { type: string }
-        item_ids:
-          type: array
-          items: { type: string }
-      required: [option_id, item_ids]
-
-    SelectedFulfillmentOption:
+    SelectedFulfillmentOptions:
       type: object
       additionalProperties: false
       properties:
         type: { type: string, enum: [shipping, digital, pickup, local_delivery] }
-        shipping: { $ref: "#/components/schemas/SelectedShippingFulfillmentOption" }
-        digital: { $ref: "#/components/schemas/SelectedDigitalFulfillmentOption" }
-        pickup: { $ref: "#/components/schemas/SelectedPickupFulfillmentOption" }
-        local_delivery:
-          {
-            $ref: "#/components/schemas/SelectedLocalDeliveryFulfillmentOption",
-          }
-      required: [type]
-      oneOf:
-        - properties:
-            type: { const: shipping }
-          required: [shipping]
-        - properties:
-            type: { const: digital }
-          required: [digital]
-        - properties:
-            type: { const: pickup }
-          required: [pickup]
-        - properties:
-            type: { const: local_delivery }
-          required: [local_delivery]
+        option_id: { type: string }
+        item_ids:
+          type: array
+          items: { type: string }
+      required: [type, option_id, item_ids]
 
     MessageInfo:
       type: object
@@ -899,31 +843,6 @@ components:
         content_type: { type: string, enum: [plain, markdown] }
         content: { type: string }
       required: [type, code, content_type, content]
-
-    AppliedCoupon:
-      type: object
-      additionalProperties: false
-      properties:
-        code: { type: string }
-        status:
-          {
-            type: string,
-            enum: [applied, invalid, expired, limit_reached],
-          }
-        discount_amount: { type: integer }
-        description: { type: string }
-        error: { type: string, nullable: true }
-      required: [code, status]
-
-    AutomaticDiscount:
-      type: object
-      additionalProperties: false
-      properties:
-        id: { type: string }
-        name: { type: string }
-        discount_amount: { type: integer }
-        description: { type: string }
-      required: [id, name, discount_amount]
 
     AvailablePromotion:
       type: object
@@ -1006,16 +925,6 @@ components:
         location_id: { type: string }
         instructions: { type: string }
       required: [id, item_ids, destination_type]
-
-    ApprovalDetails:
-      type: object
-      additionalProperties: false
-      properties:
-        approver_email: { type: string, format: email }
-        approval_threshold: { type: integer }
-        requested_at: { type: string, format: date-time }
-        approval_url: { type: string, format: uri }
-      required: [approver_email]
 
     EstimatedDelivery:
       type: object
@@ -1131,7 +1040,7 @@ components:
               - $ref: "#/components/schemas/FulfillmentOptionLocalDelivery"
         selected_fulfillment_options:
           type: array
-          items: { $ref: "#/components/schemas/SelectedFulfillmentOption" }
+          items: { $ref: "#/components/schemas/SelectedFulfillmentOptions" }
         fulfillment_groups:
           type: array
           items: { $ref: "#/components/schemas/FulfillmentGroup" }
@@ -1150,16 +1059,9 @@ components:
           items: { $ref: "#/components/schemas/Link" }
         authentication_metadata:
           $ref: "#/components/schemas/AuthenticationMetadata"
-        applied_coupons:
-          type: array
-          items: { $ref: "#/components/schemas/AppliedCoupon" }
-        automatic_discounts:
-          type: array
-          items: { $ref: "#/components/schemas/AutomaticDiscount" }
         available_promotions:
           type: array
           items: { $ref: "#/components/schemas/AvailablePromotion" }
-        approval_details: { $ref: "#/components/schemas/ApprovalDetails" }
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
         expires_at: { type: string, format: date-time }
@@ -1234,7 +1136,7 @@ components:
           items: { $ref: "#/components/schemas/FulfillmentGroup" }
         selected_fulfillment_options:
           type: array
-          items: { $ref: "#/components/schemas/SelectedFulfillmentOption" }
+          items: { $ref: "#/components/schemas/SelectedFulfillmentOptions" }
         coupons:
           type: array
           items: { type: string }

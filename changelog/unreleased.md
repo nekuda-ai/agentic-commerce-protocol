@@ -163,8 +163,8 @@ Added presentment currency for display purposes with `presentment_currency`, `ex
 
 #### 8. Additional Features
 
-- B2B commerce features (purchase orders, approval workflows)
-- Promotional campaigns (coupons, automatic discounts)
+- B2B commerce features (purchase orders)
+- Promotional campaigns (available promotions)
 - Enhanced product metadata (SKU, variant ID, weight, dimensions)
 - Expanded link types (`shipping_policy`, `contact_us`, `about_us`, `faq`, `support`)
 - Order confirmation details in complete responses
@@ -179,18 +179,16 @@ Added presentment currency for display purposes with `presentment_currency`, `ex
 - `FulfillmentOptionPickup`
 - `FulfillmentOptionLocalDelivery`
 - `MessageWarning`
-- `AppliedCoupon`
-- `AutomaticDiscount`
-- `ApprovalDetails`
 
 **Modified Schemas:**
 - `CheckoutSessionBase` - Added many new optional fields
-- `LineItem` - Added `quantity`, `parent_id`, extensive metadata
-- `Item` - Removed `quantity`
+- `LineItem` - Added `quantity`, `parent_id`, extensive metadata; now uses `totals` array for pricing breakdown instead of individual amount fields
+- `Item` - Removed `quantity`; added `name` and `unit_amount`
 - `Buyer` - Flexible name handling, company details
 - `Message` - Added severity levels
 - `Link` - Added title and new types
-- `FulfillmentOption` - Added descriptions
+- `FulfillmentOption*` - All fulfillment option types now use `totals` array instead of individual `subtotal`, `tax`, `total` fields
+- `SelectedFulfillmentOptions` - Simplified from discriminated union; now includes `type`, `option_id`, and `item_ids` directly
 
 ### Migration Guide
 
@@ -305,7 +303,7 @@ This release introduces several breaking changes to the Agentic Commerce Protoco
 
 **Change:**
 - Old: Single string `fulfillment_option_id` field
-- New: Array `selected_fulfillment_options[]` with type-specific nested structures supporting multiple selections and item-level mappings
+- New: Array `selected_fulfillment_options[]` with simplified structure supporting multiple selections and item-level mappings
 
 **Migration:**
 ```json
@@ -319,10 +317,8 @@ This release introduces several breaking changes to the Agentic Commerce Protoco
   "selected_fulfillment_options": [
     {
       "type": "shipping",
-      "shipping": {
-        "option_id": "fulfillment_option_123",
-        "item_ids": ["item_456"]
-      }
+      "option_id": "fulfillment_option_123",
+      "item_ids": ["item_456"]
     }
   ]
 }

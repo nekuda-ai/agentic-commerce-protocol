@@ -490,11 +490,12 @@
         "pickup_type": { "type": "string", "enum": ["in_store", "curbside", "locker"] },
         "ready_by": { "type": "string", "format": "date-time" },
         "pickup_by": { "type": "string", "format": "date-time" },
-        "subtotal": { "type": "integer" },
-        "tax": { "type": "integer" },
-        "total": { "type": "integer" }
+        "totals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Total" }
+        }
       },
-      "required": ["type", "id", "title", "location", "total"]
+      "required": ["type", "id", "title", "location", "totals"]
     },
     "FulfillmentOptionLocalDelivery": {
       "type": "object",
@@ -519,11 +520,12 @@
             "center_postal_code": { "type": "string" }
           }
         },
-        "subtotal": { "type": "integer" },
-        "tax": { "type": "integer" },
-        "total": { "type": "integer" }
+        "totals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Total" }
+        }
       },
-      "required": ["type", "id", "title", "total"]
+      "required": ["type", "id", "title", "totals"]
     },
     "FulfillmentOptionShipping": {
       "type": "object",
@@ -553,17 +555,12 @@
           "type": "string",
           "format": "date-time"
         },
-        "subtotal": {
-          "type": "integer"
-        },
-        "tax": {
-          "type": "integer"
-        },
-        "total": {
-          "type": "integer"
+        "totals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Total" }
         }
       },
-      "required": ["type", "id", "title", "total"]
+      "required": ["type", "id", "title", "totals"]
     },
     "FulfillmentOptionDigital": {
       "type": "object",
@@ -582,83 +579,14 @@
         "description": {
           "type": "string"
         },
-        "subtotal": {
-          "type": "integer"
-        },
-        "tax": {
-          "type": "integer"
-        },
-        "total": {
-          "type": "integer"
-        }
-      },
-      "required": ["type", "id", "title", "total"]
-    },
-    "SelectedPickupFulfillmentOption": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "option_id": {
-          "type": "string"
-        },
-        "item_ids": {
+        "totals": {
           "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "items": { "$ref": "#/$defs/Total" }
         }
       },
-      "required": ["option_id", "item_ids"]
+      "required": ["type", "id", "title", "totals"]
     },
-    "SelectedLocalDeliveryFulfillmentOption": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "option_id": {
-          "type": "string"
-        },
-        "item_ids": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": ["option_id", "item_ids"]
-    },
-    "SelectedShippingFulfillmentOption": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "option_id": {
-          "type": "string"
-        },
-        "item_ids": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": ["option_id", "item_ids"]
-    },
-    "SelectedDigitalFulfillmentOption": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "option_id": {
-          "type": "string"
-        },
-        "item_ids": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": ["option_id", "item_ids"]
-    },
-    "SelectedFulfillmentOption": {
+    "SelectedFulfillmentOptions": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -666,69 +594,17 @@
           "type": "string",
           "enum": ["shipping", "digital", "pickup", "local_delivery"]
         },
-        "shipping": {
-          "$ref": "#/$defs/SelectedShippingFulfillmentOption"
+        "option_id": {
+          "type": "string"
         },
-        "digital": {
-          "$ref": "#/$defs/SelectedDigitalFulfillmentOption"
-        },
-        "pickup": {
-          "$ref": "#/$defs/SelectedPickupFulfillmentOption"
-        },
-        "local_delivery": {
-          "$ref": "#/$defs/SelectedLocalDeliveryFulfillmentOption"
+        "item_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
-      "required": ["type"],
-      "oneOf": [
-        {
-          "properties": {
-            "type": { "const": "shipping" }
-          },
-          "required": ["shipping"]
-        },
-        {
-          "properties": {
-            "type": { "const": "digital" }
-          },
-          "required": ["digital"]
-        },
-        {
-          "properties": {
-            "type": { "const": "pickup" }
-          },
-          "required": ["pickup"]
-        },
-        {
-          "properties": {
-            "type": { "const": "local_delivery" }
-          },
-          "required": ["local_delivery"]
-        }
-      ]
-    },
-    "AppliedCoupon": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "code": { "type": "string" },
-        "status": { "type": "string", "enum": ["applied", "invalid", "expired", "limit_reached"] },
-        "discount_amount": { "type": "integer" },
-        "description": { "type": "string" },
-        "error": { "type": ["string", "null"] }
-      },
-      "required": ["code", "status"]
-    },
-    "AutomaticDiscount": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "discount_amount": { "type": "integer" },
-        "description": { "type": "string" }
-      },
-      "required": ["id", "name", "discount_amount"]
+      "required": ["type", "option_id", "item_ids"]
     },
     "AvailablePromotion": {
       "type": "object",
@@ -773,17 +649,6 @@
         "instructions": { "type": "string" }
       },
       "required": ["id", "item_ids", "destination_type"]
-    },
-    "ApprovalDetails": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "approver_email": { "type": "string", "format": "email" },
-        "approval_threshold": { "type": "integer" },
-        "requested_at": { "type": "string", "format": "date-time" },
-        "approval_url": { "type": "string", "format": "uri" }
-      },
-      "required": ["approver_email"]
     },
     "EstimatedDelivery": {
       "type": "object",
@@ -1401,7 +1266,7 @@
         "selected_fulfillment_options": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/SelectedFulfillmentOption"
+            "$ref": "#/$defs/SelectedFulfillmentOptions"
           }
         },
         "fulfillment_groups": {
@@ -1441,19 +1306,10 @@
         "authentication_metadata": {
           "$ref": "#/$defs/AuthenticationMetadata"
         },
-        "applied_coupons": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/AppliedCoupon" }
-        },
-        "automatic_discounts": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/AutomaticDiscount" }
-        },
         "available_promotions": {
           "type": "array",
           "items": { "$ref": "#/$defs/AvailablePromotion" }
         },
-        "approval_details": { "$ref": "#/$defs/ApprovalDetails" },
         "created_at": { "type": "string", "format": "date-time" },
         "updated_at": { "type": "string", "format": "date-time" },
         "expires_at": { "type": "string", "format": "date-time" },
@@ -1561,7 +1417,7 @@
         "selected_fulfillment_options": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/SelectedFulfillmentOption"
+            "$ref": "#/$defs/SelectedFulfillmentOptions"
           }
         },
         "coupons": {

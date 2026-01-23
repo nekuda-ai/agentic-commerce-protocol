@@ -396,3 +396,4 @@ For each high and medium priority area, create a detailed SEP that:
 5. Addresses backward compatibility
 
 These SEPs should be created independently and can be implemented in any order based on merchant needs and business priorities.
+

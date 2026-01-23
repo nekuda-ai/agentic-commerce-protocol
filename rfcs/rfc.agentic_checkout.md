@@ -178,16 +178,19 @@ If a client calls `POST .../complete` while `session.status` is `authentication_
 - **Total**: `type` (`items_base_amount | items_discount | subtotal | discount | fulfillment | tax | fee | total`), `display_text`, `amount` (**int**), `description?` (optional string for fees)
 - **Address**: `name`, `line_one`, `line_two?`, `city`, `state`, `country`, `postal_code`
 - **FulfillmentDetails**: `name?`, `phone?`, `email?`, `address?` (nested Address object)
-- **FulfillmentOption (shipping)**: `id`, `title`, `subtitle?`, `carrier?`, `earliest_delivery_time?`, `latest_delivery_time?`, `subtotal?`, `tax?`, `total` (**int**)
-- **FulfillmentOption (digital)**: `id`, `title`, `subtitle?`, `subtotal?`, `tax?`, `total` (**int**)
-- **SelectedFulfillmentOption**: `type` (`shipping|digital`), and type-specific nested object (e.g., `shipping: {option_id, item_ids[]}`)
+- **FulfillmentOption (shipping)**: `id`, `title`, `description?`, `carrier?`, `earliest_delivery_time?`, `latest_delivery_time?`, `totals` (array of **Total**)
+- **FulfillmentOption (digital)**: `id`, `title`, `description?`, `totals` (array of **Total**)
+- **FulfillmentOption (pickup)**: `id`, `title`, `description?`, `location`, `pickup_type?`, `ready_by?`, `pickup_by?`, `totals` (array of **Total**)
+- **FulfillmentOption (local_delivery)**: `id`, `title`, `description?`, `delivery_window?`, `service_area?`, `totals` (array of **Total**)
+- **SelectedFulfillmentOptions**: `type` (`shipping|digital|pickup|local_delivery`), `option_id`, `item_ids[]` (simple object mapping fulfillment option to items)
 - **PaymentProvider**: `provider` (`stripe`), `supported_payment_methods` (array of **PaymentMethod**)
 - **PaymentMethod**: `type` (`"card"`), `supported_card_networks` (`amex | discover | mastercard | visa`)
 - **PaymentData**: `token`, `provider` (`stripe`), `billing_address?`
 - **Order**: `id`, `checkout_session_id`, `permalink_url`
 - **Message (info)**: `type: "info"`, `param?`, `content_type: "plain"|"markdown"`, `content`
 - **Message (error)**: `type: "error"`, `code` (`missing|invalid|out_of_stock|payment_declined|requires_sign_in|requires_3ds`), `param?`, `content_type`, `content`
-- **Link**: `type` (`terms_of_use|privacy_policy|return_policy`), `url`
+- **Link**: `type` (`terms_of_use|privacy_policy|return_policy|shipping_policy|contact_us|about_us|faq|support`), `url`, `title?`
+- **Total**: `type`, `display_text`, `amount` (**int**), `description?`
 
 3D Secure / Authentication-specific types:
 - **AuthenticationMetadata**: 
@@ -232,7 +235,7 @@ All money fields are **integers (minor units)**.
 - All monetary amounts are **integers** (minor units).
 - `status` ∈ `not_ready_for_payment | ready_for_payment | completed | canceled | in_progress`.
 - At least one `Total` with `type: "total"` **SHOULD** be present when calculable.
-- `selected_fulfillment_options[].shipping.option_id` or `digital.option_id` **MUST** match an element of `fulfillment_options` when set.
+- `selected_fulfillment_options[].option_id` **MUST** match an element of `fulfillment_options` when set.
 - `messages[].param` **SHOULD** be an RFC 9535 JSONPath when applicable.
 - When status is `authentication_required`, the session response MUST include `authentication_metadata`.
 
@@ -306,10 +309,8 @@ All money fields are **integers (minor units)**.
   "selected_fulfillment_options": [
     {
       "type": "shipping",
-      "shipping": {
-        "option_id": "fulfillment_option_123",
-        "item_ids": ["item_456"]
-      }
+      "option_id": "fulfillment_option_123",
+      "item_ids": ["item_456"]
     }
   ],
   "totals": [
@@ -328,25 +329,25 @@ All money fields are **integers (minor units)**.
       "type": "shipping",
       "id": "fulfillment_option_123",
       "title": "Standard",
-      "subtitle": "Arrives in 4-5 days",
+      "description": "Arrives in 4-5 days",
       "carrier": "USPS",
       "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
       "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-      "subtotal": 100,
-      "tax": 0,
-      "total": 100
+      "totals": [
+        { "type": "total", "display_text": "Shipping", "amount": 100 }
+      ]
     },
     {
       "type": "shipping",
       "id": "fulfillment_option_456",
       "title": "Express",
-      "subtitle": "Arrives in 1-2 days",
+      "description": "Arrives in 1-2 days",
       "carrier": "USPS",
       "earliest_delivery_time": "2025-10-09T07:20:50.52Z",
       "latest_delivery_time": "2025-10-10T07:20:50.52Z",
-      "subtotal": 500,
-      "tax": 0,
-      "total": 500
+      "totals": [
+        { "type": "total", "display_text": "Express Shipping", "amount": 500 }
+      ]
     }
   ],
   "messages": [],
@@ -365,11 +366,8 @@ All money fields are **integers (minor units)**.
 {
   "selected_fulfillment_options": [
     {
-      "type": "shipping",
-      "shipping": {
-        "option_id": "fulfillment_option_456",
-        "item_ids": ["item_456"]
-      }
+      "option_id": "fulfillment_option_456",
+      "item_ids": ["item_456"]
     }
   ]
 }
@@ -409,11 +407,8 @@ All money fields are **integers (minor units)**.
   },
   "selected_fulfillment_options": [
     {
-      "type": "shipping",
-      "shipping": {
-        "option_id": "fulfillment_option_456",
-        "item_ids": ["item_456"]
-      }
+      "option_id": "fulfillment_option_456",
+      "item_ids": ["item_456"]
     }
   ],
   "totals": [
@@ -432,25 +427,25 @@ All money fields are **integers (minor units)**.
       "type": "shipping",
       "id": "fulfillment_option_123",
       "title": "Standard",
-      "subtitle": "Arrives in 4-5 days",
+      "description": "Arrives in 4-5 days",
       "carrier": "USPS",
       "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
       "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-      "subtotal": 100,
-      "tax": 0,
-      "total": 100
+      "totals": [
+        { "type": "total", "display_text": "Shipping", "amount": 100 }
+      ]
     },
     {
       "type": "shipping",
       "id": "fulfillment_option_456",
       "title": "Express",
-      "subtitle": "Arrives in 1-2 days",
+      "description": "Arrives in 1-2 days",
       "carrier": "USPS",
       "earliest_delivery_time": "2025-10-09T07:20:50.52Z",
       "latest_delivery_time": "2025-10-10T07:20:50.52Z",
-      "subtotal": 500,
-      "tax": 0,
-      "total": 500
+      "totals": [
+        { "type": "total", "display_text": "Express Shipping", "amount": 500 }
+      ]
     }
   ],
   "messages": [],
@@ -541,10 +536,8 @@ If the session is in `authentication_required` state, a client MUST include `aut
   "selected_fulfillment_options": [
     {
       "type": "shipping",
-      "shipping": {
-        "option_id": "fulfillment_option_123",
-        "item_ids": ["item_456"]
-      }
+      "option_id": "fulfillment_option_123",
+      "item_ids": ["item_456"]
     }
   ],
   "totals": [
@@ -563,25 +556,25 @@ If the session is in `authentication_required` state, a client MUST include `aut
       "type": "shipping",
       "id": "fulfillment_option_123",
       "title": "Standard",
-      "subtitle": "Arrives in 4-5 days",
+      "description": "Arrives in 4-5 days",
       "carrier": "USPS",
       "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
       "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-      "subtotal": 100,
-      "tax": 0,
-      "total": 100
+      "totals": [
+        { "type": "total", "display_text": "Shipping", "amount": 100 }
+      ]
     },
     {
       "type": "shipping",
       "id": "fulfillment_option_456",
       "title": "Express",
-      "subtitle": "Arrives in 1-2 days",
+      "description": "Arrives in 1-2 days",
       "carrier": "USPS",
       "earliest_delivery_time": "2025-10-09T07:20:50.52Z",
       "latest_delivery_time": "2025-10-10T07:20:50.52Z",
-      "subtotal": 500,
-      "tax": 0,
-      "total": 500
+      "totals": [
+        { "type": "total", "display_text": "Express Shipping", "amount": 500 }
+      ]
     }
   ],
   "messages": [],

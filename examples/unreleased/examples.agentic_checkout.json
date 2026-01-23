@@ -140,12 +140,8 @@
     "selected_fulfillment_options": [
       {
         "type": "shipping",
-        "shipping": {
-          "option_id": "fulfillment_option_123",
-          "item_ids": [
-            "item_123"
-          ]
-        }
+        "option_id": "fulfillment_option_123",
+        "item_ids": ["item_123"]
       }
     ],
     "totals": [
@@ -186,25 +182,25 @@
         "type": "shipping",
         "id": "fulfillment_option_123",
         "title": "Standard",
-        "subtitle": "Arrives in 4-5 days",
+        "description": "Arrives in 4-5 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
         "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-        "subtotal": 100,
-        "tax": 0,
-        "total": 100
+        "totals": [
+          { "type": "total", "display_text": "Shipping", "amount": 100 }
+        ]
       },
       {
         "type": "shipping",
         "id": "fulfillment_option_456",
         "title": "Express",
-        "subtitle": "Arrives in 1-2 days",
+        "description": "Arrives in 1-2 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-09T07:20:50.52Z",
         "latest_delivery_time": "2025-10-10T07:20:50.52Z",
-        "subtotal": 500,
-        "tax": 0,
-        "total": 500
+        "totals": [
+          { "type": "total", "display_text": "Express Shipping", "amount": 500 }
+        ]
       }
     ],
     "messages": [],
@@ -223,12 +219,8 @@
     "selected_fulfillment_options": [
       {
         "type": "shipping",
-        "shipping": {
-          "option_id": "fulfillment_option_456",
-          "item_ids": [
-            "item_123"
-          ]
-        }
+        "option_id": "fulfillment_option_456",
+        "item_ids": ["item_123"]
       }
     ]
   },
@@ -293,12 +285,8 @@
     "selected_fulfillment_options": [
       {
         "type": "shipping",
-        "shipping": {
-          "option_id": "fulfillment_option_456",
-          "item_ids": [
-            "item_123"
-          ]
-        }
+        "option_id": "fulfillment_option_456",
+        "item_ids": ["item_123"]
       }
     ],
     "totals": [
@@ -333,25 +321,25 @@
         "type": "shipping",
         "id": "fulfillment_option_123",
         "title": "Standard",
-        "subtitle": "Arrives in 4-5 days",
+        "description": "Arrives in 4-5 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
         "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-        "subtotal": 100,
-        "tax": 0,
-        "total": 100
+        "totals": [
+          { "type": "total", "display_text": "Shipping", "amount": 100 }
+        ]
       },
       {
         "type": "shipping",
         "id": "fulfillment_option_456",
         "title": "Express",
-        "subtitle": "Arrives in 1-2 days",
+        "description": "Arrives in 1-2 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-09T07:20:50.52Z",
         "latest_delivery_time": "2025-10-10T07:20:50.52Z",
-        "subtotal": 500,
-        "tax": 0,
-        "total": 500
+        "totals": [
+          { "type": "total", "display_text": "Express Shipping", "amount": 500 }
+        ]
       }
     ],
     "messages": [],
@@ -490,12 +478,8 @@
     "selected_fulfillment_options": [
       {
         "type": "shipping",
-        "shipping": {
-          "option_id": "fulfillment_option_123",
-          "item_ids": [
-            "item_123"
-          ]
-        }
+        "option_id": "fulfillment_option_123",
+        "item_ids": ["item_123"]
       }
     ],
     "totals": [
@@ -530,25 +514,25 @@
         "type": "shipping",
         "id": "fulfillment_option_123",
         "title": "Standard",
-        "subtitle": "Arrives in 4-5 days",
+        "description": "Arrives in 4-5 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
         "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-        "subtotal": 100,
-        "tax": 0,
-        "total": 100
+        "totals": [
+          { "type": "total", "display_text": "Shipping", "amount": 100 }
+        ]
       },
       {
         "type": "shipping",
         "id": "fulfillment_option_456",
         "title": "Express",
-        "subtitle": "Arrives in 1-2 days",
+        "description": "Arrives in 1-2 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-09T07:20:50.52Z",
         "latest_delivery_time": "2025-10-10T07:20:50.52Z",
-        "subtotal": 500,
-        "tax": 0,
-        "total": 500
+        "totals": [
+          { "type": "total", "display_text": "Express Shipping", "amount": 500 }
+        ]
       }
     ],
     "messages": [],
@@ -629,12 +613,8 @@
     "selected_fulfillment_options": [
       {
         "type": "shipping",
-        "shipping": {
-          "option_id": "fulfillment_option_123",
-          "item_ids": [
-            "item_123"
-          ]
-        }
+        "option_id": "fulfillment_option_123",
+        "item_ids": ["item_123"]
       }
     ],
     "totals": [
@@ -669,25 +649,25 @@
         "type": "shipping",
         "id": "fulfillment_option_123",
         "title": "Standard",
-        "subtitle": "Arrives in 4-5 days",
+        "description": "Arrives in 4-5 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
         "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-        "subtotal": 100,
-        "tax": 0,
-        "total": 100
+        "totals": [
+          { "type": "total", "display_text": "Shipping", "amount": 100 }
+        ]
       },
       {
         "type": "shipping",
         "id": "fulfillment_option_456",
         "title": "Express",
-        "subtitle": "Arrives in 1-2 days",
+        "description": "Arrives in 1-2 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-09T07:20:50.52Z",
         "latest_delivery_time": "2025-10-10T07:20:50.52Z",
-        "subtotal": 500,
-        "tax": 0,
-        "total": 500
+        "totals": [
+          { "type": "total", "display_text": "Express Shipping", "amount": 500 }
+        ]
       }
     ],
     "messages": [],
@@ -783,12 +763,8 @@
     "selected_fulfillment_options": [
       {
         "type": "shipping",
-        "shipping": {
-          "option_id": "fulfillment_option_123",
-          "item_ids": [
-            "item_123"
-          ]
-        }
+        "option_id": "fulfillment_option_123",
+        "item_ids": ["item_123"]
       }
     ],
     "totals": [
@@ -823,13 +799,13 @@
         "type": "shipping",
         "id": "fulfillment_option_123",
         "title": "Standard",
-        "subtitle": "Arrives in 4-5 days",
+        "description": "Arrives in 4-5 days",
         "carrier": "USPS",
         "earliest_delivery_time": "2025-10-12T07:20:50.52Z",
         "latest_delivery_time": "2025-10-13T07:20:50.52Z",
-        "subtotal": 100,
-        "tax": 0,
-        "total": 100
+        "totals": [
+          { "type": "total", "display_text": "Shipping", "amount": 100 }
+        ]
       }
     ],
     "messages": [
@@ -969,13 +945,15 @@
         "type": "shipping",
         "id": "ful_overnight_01",
         "title": "Overnight",
-        "subtitle": "Next-business-day delivery",
+        "description": "Next-business-day delivery",
         "carrier": "UPS",
         "earliest_delivery_time": "2026-01-13T08:00:00Z",
         "latest_delivery_time": "2026-01-13T20:00:00Z",
-        "subtotal": 2500,
-        "tax": 0,
-        "total": 2500
+        "totals": [
+          { "type": "subtotal", "display_text": "Shipping Fee", "amount": 2500 },
+          { "type": "tax", "display_text": "Tax", "amount": 0 },
+          { "type": "total", "display_text": "Total", "amount": 2500 }
+        ]
       }
     ],
     "messages": [],
