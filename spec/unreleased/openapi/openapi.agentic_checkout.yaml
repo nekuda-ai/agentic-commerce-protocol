@@ -759,7 +759,7 @@ components:
           items: { $ref: "#/components/schemas/Total" }
       required: [type, id, title, totals]
 
-    SelectedFulfillmentOptions:
+    SelectedFulfillmentOption:
       type: object
       additionalProperties: false
       properties:
@@ -843,15 +843,6 @@ components:
         content_type: { type: string, enum: [plain, markdown] }
         content: { type: string }
       required: [type, code, content_type, content]
-
-    AvailablePromotion:
-      type: object
-      additionalProperties: false
-      properties:
-        code: { type: string }
-        description: { type: string }
-        requirements: { type: string }
-      required: [code, description]
 
     GiftWrap:
       type: object
@@ -1040,7 +1031,7 @@ components:
               - $ref: "#/components/schemas/FulfillmentOptionLocalDelivery"
         selected_fulfillment_options:
           type: array
-          items: { $ref: "#/components/schemas/SelectedFulfillmentOptions" }
+          items: { $ref: "#/components/schemas/SelectedFulfillmentOption" }
         fulfillment_groups:
           type: array
           items: { $ref: "#/components/schemas/FulfillmentGroup" }
@@ -1059,9 +1050,6 @@ components:
           items: { $ref: "#/components/schemas/Link" }
         authentication_metadata:
           $ref: "#/components/schemas/AuthenticationMetadata"
-        available_promotions:
-          type: array
-          items: { $ref: "#/components/schemas/AvailablePromotion" }
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
         expires_at: { type: string, format: date-time }
@@ -1136,7 +1124,7 @@ components:
           items: { $ref: "#/components/schemas/FulfillmentGroup" }
         selected_fulfillment_options:
           type: array
-          items: { $ref: "#/components/schemas/SelectedFulfillmentOptions" }
+          items: { $ref: "#/components/schemas/SelectedFulfillmentOption" }
         coupons:
           type: array
           items: { type: string }
