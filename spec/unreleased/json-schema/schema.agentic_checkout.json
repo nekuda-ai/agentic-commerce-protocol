@@ -1256,7 +1256,13 @@
         "selected_fulfillment_options": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/SelectedFulfillmentOption"
+            "$ref": "#/$defs/SelectedFulfillmentOptions"
+          }
+        },
+        "fulfillment_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FulfillmentGroup"
           }
         },
         "fulfillment_groups": {
@@ -1403,7 +1409,7 @@
         "selected_fulfillment_options": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/SelectedFulfillmentOption"
+            "$ref": "#/$defs/SelectedFulfillmentOptions"
           }
         },
         "coupons": {
