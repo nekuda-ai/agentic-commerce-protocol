@@ -188,7 +188,7 @@ Added presentment currency for display purposes with `presentment_currency`, `ex
 - `Message` - Added severity levels
 - `Link` - Added title and new types
 - `FulfillmentOption*` - All fulfillment option types now use `totals` array instead of individual `subtotal`, `tax`, `total` fields
-- `SelectedFulfillmentOptions` - Simplified from discriminated union; now includes `type`, `option_id`, and `item_ids` directly
+- `SelectedFulfillmentOption` - Simplified from discriminated union; now includes `type`, `option_id`, and `item_ids` directly
 
 ### Migration Guide
 

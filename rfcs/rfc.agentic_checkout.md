@@ -182,7 +182,7 @@ If a client calls `POST .../complete` while `session.status` is `authentication_
 - **FulfillmentOption (digital)**: `id`, `title`, `description?`, `totals` (array of **Total**)
 - **FulfillmentOption (pickup)**: `id`, `title`, `description?`, `location`, `pickup_type?`, `ready_by?`, `pickup_by?`, `totals` (array of **Total**)
 - **FulfillmentOption (local_delivery)**: `id`, `title`, `description?`, `delivery_window?`, `service_area?`, `totals` (array of **Total**)
-- **SelectedFulfillmentOptions**: `type` (`shipping|digital|pickup|local_delivery`), `option_id`, `item_ids[]` (simple object mapping fulfillment option to items)
+- **SelectedFulfillmentOption**: `type` (`shipping|digital|pickup|local_delivery`), `option_id`, `item_ids[]` (simple object mapping fulfillment option to items)
 - **PaymentProvider**: `provider` (`stripe`), `supported_payment_methods` (array of **PaymentMethod**)
 - **PaymentMethod**: `type` (`"card"`), `supported_card_networks` (`amex | discover | mastercard | visa`)
 - **PaymentData**: `token`, `provider` (`stripe`), `billing_address?`
