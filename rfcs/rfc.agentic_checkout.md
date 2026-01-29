@@ -189,7 +189,7 @@ If a client calls `POST .../complete` while `session.status` is `authentication_
 - **Order**: `id`, `checkout_session_id`, `permalink_url`
 - **Message (info)**: `type: "info"`, `param?`, `content_type: "plain"|"markdown"`, `content`
 - **Message (error)**: `type: "error"`, `code` (`missing|invalid|out_of_stock|payment_declined|requires_sign_in|requires_3ds`), `param?`, `content_type`, `content`
-- **Link**: `type` (`terms_of_use|privacy_policy|return_policy|shipping_policy|contact_us|about_us|faq|support`), `url`, `title?`
+- **Link**: `type` (`terms_of_use|privacy_policy|return_policy`), `url`
 - **Total**: `type`, `display_text`, `amount` (**int**), `description?`
 
 3D Secure / Authentication-specific types:
