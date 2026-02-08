@@ -81,6 +81,10 @@ paths:
             Request-Id:
               description: Echo of the request correlation ID
               schema: { type: string }
+            Idempotent-Replayed:
+              description: "true when the response is a cached replay of a previous request with the same Idempotency-Key"
+              required: false
+              schema: { type: string, enum: ["true"] }
           content:
             application/json:
               schema:
@@ -107,6 +111,12 @@ paths:
                       code: invalid_card
                       message: "card field is required when payment_method.type=card"
                       param: "payment_method.number"
+                idempotency_key_required:
+                  value:
+                    error:
+                      type: invalid_request
+                      code: idempotency_key_required
+                      message: "Idempotency-Key header is required"
         "401":
           description: Unauthorized
           content:
@@ -120,17 +130,22 @@ paths:
                       code: unauthorized
                       message: "Unauthorized"
         "409":
-          description: Idempotency conflict
+          description: In-flight collision — original request still processing
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying
+              required: true
+              schema: { type: integer }
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Error" }
               examples:
-                idem_conflict:
+                idempotency_in_flight:
                   value:
                     error:
                       type: invalid_request
-                      code: idempotency_conflict
-                      message: "Same Idempotency-Key used with different parameters"
+                      code: idempotency_in_flight
+                      message: "A request with this Idempotency-Key is currently being processed"
         "422":
           description: Semantic validation error
           content:
@@ -144,6 +159,12 @@ paths:
                       code: invalid_card
                       message: "Invalid card expiration month"
                       param: "payment_method.exp_month"
+                idempotency_conflict:
+                  value:
+                    error:
+                      type: invalid_request
+                      code: idempotency_conflict
+                      message: "Idempotency-Key reused with different request body"
         "429":
           description: Rate limit exceeded
           content:
@@ -220,10 +241,12 @@ components:
     IdempotencyKey:
       name: Idempotency-Key
       in: header
-      required: false
+      required: true
+      description: "Idempotency key. MUST be present on all POST requests. Opaque string, max 255 characters. UUID v4 recommended. Scoped to authenticated identity + endpoint."
       schema:
         type: string
-        example: "idem_abc123"
+        maxLength: 255
+        example: "550e8400-e29b-41d4-a716-446655440000"
     RequestId:
       name: Request-Id
       in: header

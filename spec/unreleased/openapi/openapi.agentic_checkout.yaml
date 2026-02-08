@@ -84,6 +84,10 @@ paths:
             Idempotency-Key:
               description: Echo of the request idempotency key
               schema: { type: string }
+            Idempotent-Replayed:
+              description: "true when the response is a cached replay of a previous request with the same Idempotency-Key"
+              required: false
+              schema: { type: string, enum: ["true"] }
             Request-Id:
               description: Echo of the request correlation id
               schema: { type: string }
@@ -91,6 +95,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CheckoutSession"
+        "400":
+          description: Missing Idempotency-Key
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_key_required:
+                  value:
+                    type: invalid_request
+                    code: idempotency_key_required
+                    message: "Idempotency-Key header is required"
+        "409":
+          description: In-flight collision — original request still processing
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying
+              required: true
+              schema: { type: integer }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_in_flight:
+                  value:
+                    type: invalid_request
+                    code: idempotency_in_flight
+                    message: "A request with this Idempotency-Key is currently being processed"
+        "422":
+          description: Idempotency payload mismatch
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_conflict:
+                  value:
+                    type: invalid_request
+                    code: idempotency_conflict
+                    message: "Idempotency-Key reused with different request body"
         "4XX":
           description: Client error
           content:
@@ -107,7 +149,6 @@ paths:
       - $ref: "#/components/parameters/Authorization"
       - $ref: "#/components/parameters/AcceptLanguage"
       - $ref: "#/components/parameters/UserAgent"
-      - $ref: "#/components/parameters/IdempotencyKey"
       - $ref: "#/components/parameters/RequestId"
       - $ref: "#/components/parameters/Signature"
       - $ref: "#/components/parameters/Timestamp"
@@ -117,6 +158,8 @@ paths:
         required: true
         schema: { type: string }
     post:
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
       tags: [CheckoutSessions]
       summary: Update a checkout session
       operationId: updateCheckoutSession
@@ -140,10 +183,53 @@ paths:
       responses:
         "200":
           description: Updated session
+          headers:
+            Idempotent-Replayed:
+              description: "true when the response is a cached replay of a previous request with the same Idempotency-Key"
+              required: false
+              schema: { type: string, enum: ["true"] }
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CheckoutSession"
+        "400":
+          description: Missing Idempotency-Key
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_key_required:
+                  value:
+                    type: invalid_request
+                    code: idempotency_key_required
+                    message: "Idempotency-Key header is required"
+        "409":
+          description: In-flight collision — original request still processing
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying
+              required: true
+              schema: { type: integer }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_in_flight:
+                  value:
+                    type: invalid_request
+                    code: idempotency_in_flight
+                    message: "A request with this Idempotency-Key is currently being processed"
+        "422":
+          description: Idempotency payload mismatch
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_conflict:
+                  value:
+                    type: invalid_request
+                    code: idempotency_conflict
+                    message: "Idempotency-Key reused with different request body"
         "4XX":
           description: Client error
           content:
@@ -232,10 +318,53 @@ paths:
       responses:
         "200":
           description: Completed session with order
+          headers:
+            Idempotent-Replayed:
+              description: "true when the response is a cached replay of a previous request with the same Idempotency-Key"
+              required: false
+              schema: { type: string, enum: ["true"] }
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CheckoutSessionWithOrder"
+        "400":
+          description: Missing Idempotency-Key
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_key_required:
+                  value:
+                    type: invalid_request
+                    code: idempotency_key_required
+                    message: "Idempotency-Key header is required"
+        "409":
+          description: In-flight collision — original request still processing
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying
+              required: true
+              schema: { type: integer }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_in_flight:
+                  value:
+                    type: invalid_request
+                    code: idempotency_in_flight
+                    message: "A request with this Idempotency-Key is currently being processed"
+        "422":
+          description: Idempotency payload mismatch
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_conflict:
+                  value:
+                    type: invalid_request
+                    code: idempotency_conflict
+                    message: "Idempotency-Key reused with different request body"
         "4XX":
           description: Client error
           content:
@@ -277,15 +406,58 @@ paths:
       responses:
         "200":
           description: Canceled session
+          headers:
+            Idempotent-Replayed:
+              description: "true when the response is a cached replay of a previous request with the same Idempotency-Key"
+              required: false
+              schema: { type: string, enum: ["true"] }
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CheckoutSession"
+        "400":
+          description: Missing Idempotency-Key
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_key_required:
+                  value:
+                    type: invalid_request
+                    code: idempotency_key_required
+                    message: "Idempotency-Key header is required"
         "405":
           description: Not cancelable (already completed/canceled)
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Error" }
+        "409":
+          description: In-flight collision — original request still processing
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying
+              required: true
+              schema: { type: integer }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_in_flight:
+                  value:
+                    type: invalid_request
+                    code: idempotency_in_flight
+                    message: "A request with this Idempotency-Key is currently being processed"
+        "422":
+          description: Idempotency payload mismatch
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                idempotency_conflict:
+                  value:
+                    type: invalid_request
+                    code: idempotency_conflict
+                    message: "Idempotency-Key reused with different request body"
 
 components:
   securitySchemes:
@@ -322,8 +494,9 @@ components:
     IdempotencyKey:
       name: Idempotency-Key
       in: header
-      required: false
-      schema: { type: string, example: "idempotency_key_123" }
+      required: true
+      description: "Idempotency key. MUST be present on all POST requests. Opaque string, max 255 characters. UUID v4 recommended. Scoped to authenticated identity + endpoint."
+      schema: { type: string, maxLength: 255, example: "550e8400-e29b-41d4-a716-446655440000" }
     RequestId:
       name: Request-Id
       in: header
@@ -1712,8 +1885,9 @@ components:
         return a valid CheckoutSession at all (e.g. malformed request or unexpected
         failure). Use Error—not MessageError—when there is no valid session state
         to return. type semantics: invalid_request — malformed request, missing
-        required fields, or invalid JSON; request_not_idempotent — idempotency
-        violation; processing_error — unexpected server-side failure;
+        required fields, invalid JSON, or idempotency violations (codes:
+        idempotency_key_required, idempotency_in_flight, idempotency_conflict);
+        processing_error — unexpected server-side failure;
         service_unavailable — temporary unavailability.
       properties:
         type:
@@ -1722,7 +1896,6 @@ components:
             enum:
               [
                 invalid_request,
-                request_not_idempotent,
                 processing_error,
                 service_unavailable,
               ],
