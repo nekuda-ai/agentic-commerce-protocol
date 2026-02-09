@@ -920,6 +920,8 @@ components:
     DiscountDetail:
       type: object
       additionalProperties: false
+      deprecated: true
+      description: "DEPRECATED: Use the Discount Extension's AppliedDiscount (discounts.applied[]) instead. DiscountDetail will be removed in a future spec version."
       properties:
         code: { type: string, description: "Discount code if applicable" }
         type: { type: string, enum: [percentage, fixed, bogo, volume], description: "Type of discount" }
@@ -978,6 +980,8 @@ components:
         discount_details:
           type: array
           items: { $ref: "#/components/schemas/DiscountDetail" }
+          deprecated: true
+          description: "DEPRECATED: Use the Discount Extension's discounts.applied[] instead."
         tax_exempt: { type: boolean }
         tax_exemption_reason: { type: string }
         parent_id: { type: string, description: "Reference to parent line item for bundled products" }
