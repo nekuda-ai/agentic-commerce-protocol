@@ -236,7 +236,7 @@ All money fields are **integers (minor units)**.
   | Variation | Equivalent? |
   |---|---|
   | Different key ordering | Yes |
-  | `null` value vs absent key | Implementation-defined (pick one, document it) |
+  | `null` value vs absent key | Servers **SHOULD** treat as equivalent |
   | Trailing zeros in numbers (`1.0` vs `1`) | Yes |
   | Array element ordering | **No** — arrays are order-sensitive |
 - Monetary values **SHOULD** use **string** or **integer-cent** representations to avoid floating-point ambiguity.
@@ -768,7 +768,7 @@ If a client calls `POST /checkout_sessions/{id}/complete` while `session.status 
 
 ## 11. Change Log
 
-- **2026-02-08**: Rewrote §6 (Idempotency, Retries & Concurrency) with full normative rules: mandatory `Idempotency-Key` on all POST requests, request equivalence semantics, replay behavior with `Idempotent-Replayed` header, IETF-aligned error codes (`idempotency_key_required`, `idempotency_conflict`, `idempotency_in_flight`), 5xx caching prohibition, 24-hour key retention, and extension field participation. Removed `request_not_idempotent` from `Error.type` enum. See SEP #120.
+- **Unreleased**: Rewrote §6 (Idempotency, Retries & Concurrency) with full normative rules: mandatory `Idempotency-Key` on all POST requests, request equivalence semantics, replay behavior with `Idempotent-Replayed` header, IETF-aligned error codes (`idempotency_key_required`, `idempotency_conflict`, `idempotency_in_flight`), 5xx caching prohibition, 24-hour key retention, and extension field participation. Removed `request_not_idempotent` from `Error.type` enum. See SEP #120.
 - **2026-02-04**: Added optional `resolution` field to Message schemas (info, warning, error) to indicate who resolves the message (`recoverable`, `requires_buyer_input`, `requires_buyer_review`). This enables agents to programmatically determine appropriate error handling strategies.
 - **2026-01-12**: Breaking changes for v2:
   - Renamed `fulfillment_address` to `fulfillment_details` with nested structure (`name`, `phone_number`, `email`, `address`)

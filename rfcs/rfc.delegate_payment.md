@@ -210,7 +210,7 @@ Exactly **one** credential type is supported today: **card**.
   | Variation | Equivalent? |
   |---|---|
   | Different key ordering | Yes |
-  | `null` value vs absent key | Implementation-defined (pick one, document it) |
+  | `null` value vs absent key | Servers **SHOULD** treat as equivalent |
   | Trailing zeros in numbers (`1.0` vs `1`) | Yes |
   | Array element ordering | **No** — arrays are order-sensitive |
 - Monetary values **SHOULD** use **string** or **integer-cent** representations to avoid floating-point ambiguity.
@@ -399,5 +399,5 @@ All idempotency errors use `type: "invalid_request"` and the following codes:
 
 ## 10. Change Log
 
-- **2026-02-08**: Rewrote §5 (Idempotency & Retries) with full normative rules: mandatory `Idempotency-Key` on all POST requests, request equivalence semantics, replay behavior with `Idempotent-Replayed` header, IETF-aligned error codes (`idempotency_key_required`, `idempotency_conflict`, `idempotency_in_flight`), 5xx caching prohibition, and 24-hour key retention. Added `idempotency_key_required` and `idempotency_in_flight` to `Error.code` enum. See SEP #120.
+- **Unreleased**: Rewrote §5 (Idempotency & Retries) with full normative rules: mandatory `Idempotency-Key` on all POST requests, request equivalence semantics, replay behavior with `Idempotent-Replayed` header, IETF-aligned error codes (`idempotency_key_required`, `idempotency_conflict`, `idempotency_in_flight`), 5xx caching prohibition, and 24-hour key retention. Added `idempotency_key_required` and `idempotency_in_flight` to `Error.code` enum. See SEP #120.
 - **2025-09-29**: Initial draft. Errors changed to **flat object** (no envelope). Tightened allowance and card display requirements.

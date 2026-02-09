@@ -66,7 +66,7 @@
   "delegate_payment_error_idempotency_conflict": {
     "type": "invalid_request",
     "code": "idempotency_conflict",
-    "message": "Idempotency-Key reused with different request body"
+    "message": "Idempotency-Key has already been used with a different request body"
   },
   "delegate_payment_error_rate_limit": {
     "type": "rate_limit_exceeded",

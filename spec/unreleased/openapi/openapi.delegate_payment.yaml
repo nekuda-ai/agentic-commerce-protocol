@@ -164,7 +164,7 @@ paths:
                     error:
                       type: invalid_request
                       code: idempotency_conflict
-                      message: "Idempotency-Key reused with different request body"
+                      message: "Idempotency-Key has already been used with a different request body"
         "429":
           description: Rate limit exceeded
           content:
