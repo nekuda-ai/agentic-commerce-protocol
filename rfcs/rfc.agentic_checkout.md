@@ -236,7 +236,7 @@ All money fields are **integers (minor units)**.
   | Variation | Equivalent? |
   |---|---|
   | Different key ordering | Yes |
-  | `null` value vs absent key | Servers **SHOULD** treat as equivalent |
+  | `null` value vs absent key | **Different** — `null` means "clear this field"; absent means "do not modify" |
   | Trailing zeros in numbers (`1.0` vs `1`) | Yes |
   | Array element ordering | **No** — arrays are order-sensitive |
 - Monetary values **SHOULD** use **string** or **integer-cent** representations to avoid floating-point ambiguity.
@@ -296,6 +296,7 @@ All idempotency errors use `type: "invalid_request"` and the following codes:
 - **Gateway / middleware pattern:** Idempotency logic is **RECOMMENDED** to live in a middleware layer in front of business logic, so all endpoints gain consistent behavior.
 - **Atomic transaction boundaries:** The idempotency key record and the business operation **SHOULD** be committed in the **same ACID transaction** to prevent ghost keys (key stored, operation failed) or lost keys (operation succeeded, key not stored).
 - **Recovery points:** When an operation triggers foreign state mutations (e.g., PSP authorization), servers **SHOULD** implement recovery-point semantics — record intermediate state so that retries can resume rather than restart.
+- **SDK serialization:** Because `null` and absent are semantically distinct (§6.2), SDK authors **SHOULD** ensure their serializers preserve the distinction. Clients **MUST** only include `null` when they intend to clear a field, and **MUST** omit the key when they intend to leave the field unchanged.
 
 ---
 
